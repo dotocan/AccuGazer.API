@@ -1,8 +1,8 @@
-namespace AccuGazer.API.Models
+namespace AccuGazer.API.Dtos
 {
-    public class Settings
+    public class SettingsDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public long TestDurationInSeconds { get; set; }
         public int NumberOfTests { get; set; }
         public bool Shuffle { get; set; }

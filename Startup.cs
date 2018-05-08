@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AccuGazer.API.Data;
 using AccuGazer.API.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,8 +29,15 @@ namespace AccuGazer.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            // Adds repos to be available for injection
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ISettingsRepository, SettingsRepository>();
+
+            services.AddTransient<Seed>();
+
+            services.AddAutoMapper();
+
             services.AddCors();
             services.AddMvc();
 
@@ -38,7 +46,7 @@ namespace AccuGazer.API
 
             // Key for JWT validation
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
-            
+
             // JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
@@ -53,13 +61,15 @@ namespace AccuGazer.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            seeder.SeedSettings();
+
             // Cors needs to be called before Mvc. If Mvc was called first
             // the app would return a response before it could add the cors headers
             // to the request
