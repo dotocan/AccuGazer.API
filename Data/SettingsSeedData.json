@@ -1,5 +1,5 @@
 {
     "TestDurationInSeconds": 5,
-    "NumberOfTests": 10,
+    "NumberOfTests": 3,
     "Shuffle": false
 }

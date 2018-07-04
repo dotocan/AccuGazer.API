@@ -16,7 +16,7 @@ namespace AccuGazer.API.Repositories
 
         public async Task<Settings> GetSettings()
         {
-            return await _context.Settings.FirstOrDefaultAsync();
+            return await _context.Settings.LastOrDefaultAsync();
         }
     }
 }
