@@ -3,10 +3,10 @@ namespace AccuGazer.API.Models
     public class GazePoint
     {
         public int Id { get; set; }
-        public int XOffsetPercent { get; set; }
-        public int YOffsetPercent { get; set; }
+        public int XPos { get; set; }
+        public int YPos { get; set; }
 
-        public int TestMeasurementId { get; set; }
-        public TestMeasurement TestMeasurement { get; set; }
+        public int MeasurementId { get; set; }
+        public Measurement Measurement { get; set; }
     }
 }

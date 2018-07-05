@@ -3,12 +3,12 @@ namespace AccuGazer.API.Models
     public class Rectangle
     {
         public long Id { get; set; }
-        public int XOffsetPercent { get; set; }
-        public int YOffsetPercent { get; set; }
-        public int WidthPercent { get; set; }
-        public int HeightPercent { get; set; }
+        public int XPos { get; set; }
+        public int YPos { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
-        public int TestId { get; set; }
-        public Test Test { get; set; }
+        public int MeasurementId { get; set; }
+        public Measurement Measurement { get; set; }
     }
 }

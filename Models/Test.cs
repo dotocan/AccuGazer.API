@@ -1,18 +1,15 @@
+using System;
 using System.Collections.Generic;
 
 namespace AccuGazer.API.Models
 {
     public class Test
     {
-        public long Id { get; set; }
-        public int TestNumber { get; set; }
-        public long Start { get; set; }
-        public long End { get; set; }
-
-        public Rectangle Rectangle { get; set; }
-        public List<TestMeasurement> TestMeasurements { get; set; }
-
-        public int TestSessionId { get; set; }
-        public TestSession TestSession { get; set; }
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public long StartTime { get; set; }
+        public long EndTime { get; set; }
+        public TestResult TestResult { get; set; }
+        public User User { get; set; }
     }
 }
