@@ -18,7 +18,8 @@ namespace AccuGazer.API.Data
         public async void SeedSettings()
         {
             var settingsToDelete = await _repo.GetSettings();
-            _context.Settings.Remove(settingsToDelete);
+            if(settingsToDelete != null)
+                _context.Settings.Remove(settingsToDelete);
 
             var settingsData =
                 System.IO.File.ReadAllText("Data/SettingsSeedData.json");
