@@ -33,6 +33,7 @@ namespace AccuGazer.API
             // Adds repos to be available for injection
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ISettingsRepository, SettingsRepository>();
+            services.AddScoped<ITestRepository, TestRepository>();
 
             services.AddTransient<Seed>();
 

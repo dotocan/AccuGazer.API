@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace AccuGazer.API.Models
 {
     public class User
@@ -10,5 +12,7 @@ namespace AccuGazer.API.Models
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PassswordSalt { get; set; }
+
+        public List<Test> tests { get; set; }
     }
 }

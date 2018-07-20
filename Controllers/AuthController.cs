@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AccuGazer.API.Dtos;
 using AccuGazer.API.Models;
 using AccuGazer.API.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -17,11 +18,13 @@ namespace AccuGazer.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             _repo = repo;
             _config = config;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -35,15 +38,8 @@ namespace AccuGazer.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userToCreate = new User
-            {
-                FirstName = userRegisterDto.FirstName,
-                LastName = userRegisterDto.LastName,
-                Gender = userRegisterDto.Gender,
-                DateOfBirth = userRegisterDto.DateOfBirth,
-                Email = userRegisterDto.Email
-            };
-
+            var userToCreate = _mapper.Map<User>(userRegisterDto);
+            
             var createdUser = await _repo.Register(userToCreate, userRegisterDto.Password);
 
             return StatusCode(201);
