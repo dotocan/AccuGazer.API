@@ -30,7 +30,14 @@ namespace AccuGazer.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SaveTest([FromBody] TestForSaveDto testForSaveDto) {
-            System.Diagnostics.Debug.WriteLine(testForSaveDto.TestResult.ScreenHeight.ToString());
+            var testResult = testForSaveDto.TestResult;
+            var measurements = testResult.Measurements;
+            
+            foreach(var measurement in measurements) {
+                
+            }
+
+
             return StatusCode(201);
         }
     }
