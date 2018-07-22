@@ -9,7 +9,8 @@ namespace AccuGazer.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
         private readonly ISettingsRepository _repo;
         private readonly IMapper _mapper;

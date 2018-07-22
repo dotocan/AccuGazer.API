@@ -10,7 +10,8 @@ namespace AccuGazer.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class TestController : Controller
+    [ApiController]
+    public class TestsController : ControllerBase
     {
         private readonly ITestRepository _repo;
         private readonly IMapper _mapper;
@@ -29,15 +30,7 @@ namespace AccuGazer.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveTest([FromBody] TestForSaveDto testForSaveDto) {
-            var testResult = testForSaveDto.TestResult;
-            var measurements = testResult.Measurements;
-            
-            foreach(var measurement in measurements) {
-                
-            }
-
-
+        public async Task<IActionResult> SaveTest(TestForSaveDto testForSaveDto) {
             return StatusCode(201);
         }
     }

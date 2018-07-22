@@ -14,7 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 namespace AccuGazer.API.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
@@ -28,15 +29,12 @@ namespace AccuGazer.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
+        public async Task<IActionResult> Register(UserRegisterDto userRegisterDto)
         {
             userRegisterDto.Email = userRegisterDto.Email.ToLower();
 
             if (await _repo.UserExists(userRegisterDto.Email))
-                ModelState.AddModelError("Email", "This email address is already in use");
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest("This email address is already in use");
 
             var userToCreate = _mapper.Map<User>(userRegisterDto);
             
@@ -46,33 +44,43 @@ namespace AccuGazer.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+        public async Task<IActionResult> Login(UserLoginDto userLoginDto)
         {
             var userFromRepo = await _repo.Login(userLoginDto.Email.ToLower(), userLoginDto.Password);
 
             if (userFromRepo == null)
                 return Unauthorized();
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Name, userFromRepo.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var credentials = new SigningCredentials(key, 
+                SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                    new Claim(ClaimTypes.Name, userFromRepo.Email)
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha512Signature)
+                SigningCredentials = credentials
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-            return Ok( new {tokenString} );
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            var user = _mapper.Map<UserToReturnDto>(userFromRepo);
+
+            return Ok( new 
+            {
+                token = tokenHandler.WriteToken(token),
+                user
+            });
         }
 
     }

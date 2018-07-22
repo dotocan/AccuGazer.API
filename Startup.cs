@@ -9,6 +9,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,13 +42,13 @@ namespace AccuGazer.API
             services.AddAutoMapper();
 
             services.AddCors();
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Database
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             // Key for JWT validation
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
+            var key = Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
 
             // JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
