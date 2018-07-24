@@ -16,7 +16,7 @@ namespace AccuGazer.API.Controllers
         private readonly ITestRepository _repo;
         private readonly IMapper _mapper;
 
-        public TestController(ITestRepository repo, IMapper mapper)
+        public TestsController(ITestRepository repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
