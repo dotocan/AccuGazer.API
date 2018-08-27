@@ -10,6 +10,6 @@ namespace AccuGazer.API.Dtos
         public string Gender { get; set; }
         public long DateOfBirth { get; set; }
         public string Email { get; set; }
-        public List<TestForSaveDto> tests { get; set; }
+        public List<TestDto> tests { get; set; }
     }
 }

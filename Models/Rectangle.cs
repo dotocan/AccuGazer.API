@@ -7,8 +7,5 @@ namespace AccuGazer.API.Models
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
-        public long MeasurementId { get; set; }
-        public Measurement Measurement { get; set; }
     }
 }

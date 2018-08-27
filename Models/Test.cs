@@ -8,6 +8,8 @@ namespace AccuGazer.API.Models
         public long Id { get; set; }
         public long StartTime { get; set; }
         public long EndTime { get; set; }
+
+        public long TestResultId { get; set; }
         public TestResult TestResult { get; set; }
 
         public long UserId { get; set; }

@@ -10,8 +10,5 @@ namespace AccuGazer.API.Models
         public int ScreenHeight { get; set; }
 
         public List<Measurement> Measurements { get; set; }
-
-        public long TestId { get; set; }
-        public Test Test { get; set; }
     }
 }

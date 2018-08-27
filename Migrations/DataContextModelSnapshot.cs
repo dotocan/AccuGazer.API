@@ -21,16 +21,11 @@ namespace AccuGazer.API.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("MeasurementId");
-
                     b.Property<int>("X");
 
                     b.Property<int>("Y");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeasurementId")
-                        .IsUnique();
 
                     b.ToTable("GazePoints");
                 });
@@ -40,13 +35,21 @@ namespace AccuGazer.API.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<long>("GazePointId");
+
                     b.Property<bool>("IsHit");
 
                     b.Property<long>("MeasuredAt");
 
+                    b.Property<long>("RectangleId");
+
                     b.Property<long?>("TestResultId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GazePointId");
+
+                    b.HasIndex("RectangleId");
 
                     b.HasIndex("TestResultId");
 
@@ -60,8 +63,6 @@ namespace AccuGazer.API.Migrations
 
                     b.Property<int>("Height");
 
-                    b.Property<long>("MeasurementId");
-
                     b.Property<int>("Width");
 
                     b.Property<int>("X");
@@ -69,9 +70,6 @@ namespace AccuGazer.API.Migrations
                     b.Property<int>("Y");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeasurementId")
-                        .IsUnique();
 
                     b.ToTable("Rectangles");
                 });
@@ -101,9 +99,13 @@ namespace AccuGazer.API.Migrations
 
                     b.Property<long>("StartTime");
 
+                    b.Property<long>("TestResultId");
+
                     b.Property<long>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TestResultId");
 
                     b.HasIndex("UserId");
 
@@ -119,12 +121,7 @@ namespace AccuGazer.API.Migrations
 
                     b.Property<int>("ScreenWidth");
 
-                    b.Property<long>("TestId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TestId")
-                        .IsUnique();
 
                     b.ToTable("TestResults");
                 });
@@ -153,42 +150,33 @@ namespace AccuGazer.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AccuGazer.API.Models.GazePoint", b =>
-                {
-                    b.HasOne("AccuGazer.API.Models.Measurement", "Measurement")
-                        .WithOne("GazePoint")
-                        .HasForeignKey("AccuGazer.API.Models.GazePoint", "MeasurementId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("AccuGazer.API.Models.Measurement", b =>
                 {
+                    b.HasOne("AccuGazer.API.Models.GazePoint", "GazePoint")
+                        .WithMany()
+                        .HasForeignKey("GazePointId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AccuGazer.API.Models.Rectangle", "Rectangle")
+                        .WithMany()
+                        .HasForeignKey("RectangleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("AccuGazer.API.Models.TestResult")
                         .WithMany("Measurements")
                         .HasForeignKey("TestResultId");
                 });
 
-            modelBuilder.Entity("AccuGazer.API.Models.Rectangle", b =>
-                {
-                    b.HasOne("AccuGazer.API.Models.Measurement", "Measurement")
-                        .WithOne("Rectangle")
-                        .HasForeignKey("AccuGazer.API.Models.Rectangle", "MeasurementId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("AccuGazer.API.Models.Test", b =>
                 {
+                    b.HasOne("AccuGazer.API.Models.TestResult", "TestResult")
+                        .WithMany()
+                        .HasForeignKey("TestResultId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("AccuGazer.API.Models.User", "User")
                         .WithMany("tests")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AccuGazer.API.Models.TestResult", b =>
-                {
-                    b.HasOne("AccuGazer.API.Models.Test", "Test")
-                        .WithOne("TestResult")
-                        .HasForeignKey("AccuGazer.API.Models.TestResult", "TestId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

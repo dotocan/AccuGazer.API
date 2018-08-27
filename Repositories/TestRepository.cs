@@ -18,8 +18,23 @@ namespace AccuGazer.API.Repositories
 
         public async Task<List<Test>> GetTestsForUser(int userId)
         {
-            var tests = await _context.Tests.Where(u => u.UserId == userId).ToListAsync();
+            var tests = await _context.Tests.Where(u => u.UserId == userId)
+                .Include(t => t.TestResult)
+                .Include(t => t.TestResult.Measurements)
+                .ThenInclude(m => m.Rectangle)
+                .Include(t => t.TestResult.Measurements)
+                .ThenInclude(m => m.GazePoint)
+                .ToListAsync();
+
             return tests;
+        }
+
+        public async Task<Test> SaveTest(int userId, Test testForSave)
+        {
+            testForSave.UserId = userId;
+            await _context.Tests.AddAsync(testForSave);
+            await _context.SaveChangesAsync();
+            return testForSave;
         }
     }
 }

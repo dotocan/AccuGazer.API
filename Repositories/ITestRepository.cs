@@ -7,5 +7,6 @@ namespace AccuGazer.API.Repositories
     public interface ITestRepository
     {
          Task<List<Test>> GetTestsForUser(int userId);
+         Task<Test> SaveTest(int userId, Test testForSave);
     }
 }
