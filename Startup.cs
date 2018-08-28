@@ -42,13 +42,18 @@ namespace AccuGazer.API
             services.AddAutoMapper();
 
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Database
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x => 
+                x.UseSqlite(Configuration
+                    .GetConnectionString("DefaultConnection")
+                ));
 
             // Key for JWT validation
-            var key = Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
+            var key = Encoding.UTF8.GetBytes(
+                Configuration.GetSection("AppSettings:Token").Value);
 
             // JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -73,10 +78,12 @@ namespace AccuGazer.API
 
             seeder.SeedSettings();
 
-            // Cors needs to be called before Mvc. If Mvc was called first
-            // the app would return a response before it could add the cors headers
-            // to the request
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+            app.UseCors(x => x
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+                .AllowCredentials());
+            
             app.UseAuthentication();
             app.UseMvc();
         }
