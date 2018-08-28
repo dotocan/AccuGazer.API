@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AccuGazer.API.Migrations
 {
-    public partial class ForeignKeyChanges : Migration
+    public partial class TestEntitiesAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,8 +43,8 @@ namespace AccuGazer.API.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TestDurationInSeconds = table.Column<long>(nullable: false),
-                    NumberOfTests = table.Column<int>(nullable: false),
+                    RectangleDuration = table.Column<long>(nullable: false),
+                    NumberOfRectanglesInTest = table.Column<int>(nullable: false),
                     Shuffle = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -53,17 +53,26 @@ namespace AccuGazer.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestResults",
+                name: "Tests",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    StartTime = table.Column<long>(nullable: false),
+                    EndTime = table.Column<long>(nullable: false),
                     ScreenWidth = table.Column<int>(nullable: false),
-                    ScreenHeight = table.Column<int>(nullable: false)
+                    ScreenHeight = table.Column<int>(nullable: false),
+                    UserId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestResults", x => x.Id);
+                    table.PrimaryKey("PK_Tests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,7 +85,7 @@ namespace AccuGazer.API.Migrations
                     IsHit = table.Column<bool>(nullable: false),
                     RectangleId = table.Column<long>(nullable: false),
                     GazePointId = table.Column<long>(nullable: false),
-                    TestResultId = table.Column<long>(nullable: true)
+                    TestId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,39 +103,11 @@ namespace AccuGazer.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Measurements_TestResults_TestResultId",
-                        column: x => x.TestResultId,
-                        principalTable: "TestResults",
+                        name: "FK_Measurements_Tests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tests",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    StartTime = table.Column<long>(nullable: false),
-                    EndTime = table.Column<long>(nullable: false),
-                    TestResultId = table.Column<long>(nullable: false),
-                    UserId = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tests_TestResults_TestResultId",
-                        column: x => x.TestResultId,
-                        principalTable: "TestResults",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Tests_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -140,14 +121,14 @@ namespace AccuGazer.API.Migrations
                 column: "RectangleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Measurements_TestResultId",
+                name: "IX_Measurements_TestId",
                 table: "Measurements",
-                column: "TestResultId");
+                column: "TestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_TestResultId",
+                name: "IX_Tests_UserId",
                 table: "Tests",
-                column: "TestResultId");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -159,16 +140,13 @@ namespace AccuGazer.API.Migrations
                 name: "Settings");
 
             migrationBuilder.DropTable(
-                name: "Tests");
-
-            migrationBuilder.DropTable(
                 name: "GazePoints");
 
             migrationBuilder.DropTable(
                 name: "Rectangles");
 
             migrationBuilder.DropTable(
-                name: "TestResults");
+                name: "Tests");
         }
     }
 }

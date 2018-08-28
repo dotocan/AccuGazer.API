@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuGazer.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180827095235_ForeignKeyChanges")]
-    partial class ForeignKeyChanges
+    [Migration("20180828120559_TestEntitiesAdded")]
+    partial class TestEntitiesAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,7 +45,7 @@ namespace AccuGazer.API.Migrations
 
                     b.Property<long>("RectangleId");
 
-                    b.Property<long?>("TestResultId");
+                    b.Property<long?>("TestId");
 
                     b.HasKey("Id");
 
@@ -53,7 +53,7 @@ namespace AccuGazer.API.Migrations
 
                     b.HasIndex("RectangleId");
 
-                    b.HasIndex("TestResultId");
+                    b.HasIndex("TestId");
 
                     b.ToTable("Measurements");
                 });
@@ -99,33 +99,19 @@ namespace AccuGazer.API.Migrations
 
                     b.Property<long>("EndTime");
 
-                    b.Property<long>("StartTime");
+                    b.Property<int>("ScreenHeight");
 
-                    b.Property<long>("TestResultId");
+                    b.Property<int>("ScreenWidth");
+
+                    b.Property<long>("StartTime");
 
                     b.Property<long>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestResultId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Tests");
-                });
-
-            modelBuilder.Entity("AccuGazer.API.Models.TestResult", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ScreenHeight");
-
-                    b.Property<int>("ScreenWidth");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestResults");
                 });
 
             modelBuilder.Entity("AccuGazer.API.Models.Measurement", b =>
@@ -140,18 +126,13 @@ namespace AccuGazer.API.Migrations
                         .HasForeignKey("RectangleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("AccuGazer.API.Models.TestResult")
+                    b.HasOne("AccuGazer.API.Models.Test")
                         .WithMany("Measurements")
-                        .HasForeignKey("TestResultId");
+                        .HasForeignKey("TestId");
                 });
 
             modelBuilder.Entity("AccuGazer.API.Models.Test", b =>
                 {
-                    b.HasOne("AccuGazer.API.Models.TestResult", "TestResult")
-                        .WithMany()
-                        .HasForeignKey("TestResultId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("AccuGazer.API.Models.User", "User")
                         .WithMany("tests")
                         .HasForeignKey("UserId")

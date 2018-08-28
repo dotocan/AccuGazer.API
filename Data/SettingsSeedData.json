@@ -1,5 +1,5 @@
 {
-    "TestDurationInSeconds": 5,
-    "NumberOfTests": 5,
+    "RectangleDuration": 5,
+    "NumberOfRectanglesInTest": 5,
     "Shuffle": false
 }

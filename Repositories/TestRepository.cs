@@ -19,10 +19,9 @@ namespace AccuGazer.API.Repositories
         public async Task<List<Test>> GetTestsForUser(int userId)
         {
             var tests = await _context.Tests.Where(u => u.UserId == userId)
-                .Include(t => t.TestResult)
-                .Include(t => t.TestResult.Measurements)
+                .Include(t => t.Measurements)
                 .ThenInclude(m => m.Rectangle)
-                .Include(t => t.TestResult.Measurements)
+                .Include(t => t.Measurements)
                 .ThenInclude(m => m.GazePoint)
                 .ToListAsync();
 

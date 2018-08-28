@@ -10,7 +10,6 @@ namespace AccuGazer.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Settings> Settings { get; set; }
         public DbSet<Test> Tests { get; set; }
-        public DbSet<TestResult> TestResults { get; set; }
         public DbSet<Measurement> Measurements { get; set; }
         public DbSet<Rectangle> Rectangles { get; set; }
         public DbSet<GazePoint> GazePoints { get; set; }

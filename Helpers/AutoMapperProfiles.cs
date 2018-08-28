@@ -15,7 +15,6 @@ namespace AccuGazer.API.Helpers
             CreateMap<GazePointDto, GazePoint>().ReverseMap();
             CreateMap<RectangleDto, Rectangle>().ReverseMap();
             CreateMap<MeasurementDto, Measurement>().ReverseMap();
-            CreateMap<TestResultDto, TestResult>().ReverseMap();
             CreateMap<TestDto, Test>().ReverseMap();
         }
     }
